@@ -6,12 +6,15 @@ public class JoystickPlayerExample : MonoBehaviour
 {
     public float moveSpeed;
     public FloatingJoystick joystick;
-    public Rigidbody2D rb;
+    private Rigidbody2D rb;
     public Vector2 move;
+
+    private Animator animator;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
     void Update()
     {
@@ -27,6 +30,15 @@ public class JoystickPlayerExample : MonoBehaviour
         // Giới hạn vị trí của gameObject
         float newX = Mathf.Clamp(rb.position.x + move.x * moveSpeed * Time.deltaTime, -screenWidth / 2, screenWidth / 2);
         float newY = Mathf.Clamp(rb.position.y + move.y * moveSpeed * Time.deltaTime, -screenHeight / 2, screenHeight / 2);
-        rb.MovePosition(new Vector2(newX,newY));        
+        if(rb!=null)
+        {
+            rb.MovePosition(new Vector2(newX, newY));
+        }    
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Destroy(rb);
+        animator.Play("destroy");
     }
 }
